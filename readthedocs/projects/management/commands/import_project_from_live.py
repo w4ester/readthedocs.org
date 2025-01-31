@@ -2,13 +2,12 @@
 
 import json
 import os
-
-import requests
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
 
 from ...models import Project
+from security import safe_requests
 
 
 class Command(BaseCommand):
@@ -49,7 +48,7 @@ class Command(BaseCommand):
         for slug in options["project_slug"]:
             self.stdout.write("Importing {slug} ...".format(slug=slug))
 
-            resp = requests.get(
+            resp = safe_requests.get(
                 "https://readthedocs.org/api/v2/project/",
                 params={"slug": slug},
                 auth=auth,

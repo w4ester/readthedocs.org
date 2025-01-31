@@ -2,11 +2,11 @@
 from allauth.socialaccount.models import SocialApp
 from django.db.models import Count
 from django.utils.text import slugify
-import requests
 from taggit.models import Tag
 from taggit.utils import _parse_tags
 
 from .constants import GITHUB_REGEXS
+from security import safe_requests
 
 
 def rtd_parse_tags(tag_string):
@@ -78,7 +78,7 @@ def import_tags(project):
         "client_secret": provider.secret,
     }
 
-    resp = requests.get(url, headers=headers, params=params, timeout=3)
+    resp = safe_requests.get(url, headers=headers, params=params, timeout=3)
     if resp.ok:
         tags = resp.json()["names"]
         if tags:

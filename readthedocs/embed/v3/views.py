@@ -20,6 +20,7 @@ from readthedocs.api.v3.permissions import HasEmbedAPIAccess
 from readthedocs.core.utils.extend import SettingsOverrideObject
 from readthedocs.embed.utils import clean_references
 from readthedocs.storage import build_media_storage
+from security import safe_requests
 
 log = structlog.get_logger(__name__)
 
@@ -78,7 +79,7 @@ class EmbedAPIBase(EmbedAPIMixin, CDNCacheTagsMixin, APIView):
             log.debug("Cached response.", url=url)
             return cached_response
 
-        response = requests.get(
+        response = safe_requests.get(
             url, timeout=settings.RTD_EMBED_API_DEFAULT_REQUEST_TIMEOUT
         )
         if response.ok:
